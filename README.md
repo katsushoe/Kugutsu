@@ -80,13 +80,12 @@ Setup detects installed launch targets and browser drivers; explicit settings ta
 
 ## Usage
 
-- Use `execute_operation` for one operation and `submit_batch` for a JSON operation list or an Aloe program. Accepted requests enter a FIFO operation buffer; use `get_request` to check completion and results, or `cancel_request` to request cancellation.
-- Window operations include listing, activation, opening, closing, minimizing, maximizing, and restoration. Input and inspection include mouse/keyboard operations and window or desktop snapshots.
-- Control operations use UI Automation or visual drivers for custom drawn UIs. Visual operations require supported profiles and target verification; OCR does not guarantee an exact value or access to internal application state.
-- Browser and DOM operations support Chrome, Edge, and Firefox through managed WebDriver sessions. Select the browser type explicitly. Installed/default browser discovery is also available.
-- Use `lock_mcp`, `is_mcp_locked`, `renew_mcp_lock`, and `unlock_mcp` for exclusive work across multiple requests. Signals support registering, waiting for, and removing conditions.
+Start `Kugutsu.exe`, then register `Kugutsu.McpProxy.exe` as an stdio MCP server in your AI client using the configuration in [Getting Started](#getting-started). Example requests:
 
-See the [usage guide (Japanese)](docs/USAGE.md), [Aloe guide (Japanese)](docs/ALOE_BATCH.md), and [operation specification (Japanese)](SPECIFICATION.md) for arguments, results, and limitations.
+- “List the open windows.”
+- “Capture the window titled ‘Notepad’ and summarize what is visible.”
+
+See the [usage guide (Japanese)](docs/USAGE.md) for more request examples and the [operation specification (Japanese)](SPECIFICATION.md) for details.
 
 ## Documentation
 

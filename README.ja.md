@@ -80,13 +80,12 @@ dotnet build installer/KugutsuSetup.wixproj -p:PayloadRoot=../artifacts/Release 
 
 ## 利用方法
 
-- 単体操作は `execute_operation`、JSON操作列またはAloeプログラムは `submit_batch` に渡します。要求はFIFOの操作バッファへ入り、`get_request` で完了と結果を確認します。取消要求は `cancel_request` です。
-- ウィンドウの一覧、前面化、起動、終了、最小化、最大化、復元に対応します。マウス・キー入力、ウィンドウ画像・デスクトップ画像の取得もできます。
-- コントロール操作はUI Automationまたは独自描画UI向けの画像ドライバーを使います。画像操作には対応プロファイルと対象確認が必要です。OCRによる値の完全一致やアプリ内部状態の取得は保証しません。
-- ブラウザ・DOM操作は管理されたWebDriverセッションでChrome、Edge、Firefoxに対応します。ブラウザ種類を明示します。既定ブラウザとインストール済みブラウザの照会もできます。
-- 複数要求にまたがる占有には `lock_mcp`、`is_mcp_locked`、`renew_mcp_lock`、`unlock_mcp` を使います。条件待機用シグナルの登録、待機、解除にも対応します。
+`Kugutsu.exe`を起動し、[はじめに](#はじめに)の設定例に従って、MCPクライアントに `Kugutsu.McpProxy.exe` をstdioサーバとして登録します。AIへの依頼例：
 
-引数、結果、制限は[利用手順](docs/USAGE.md)、[Aloeガイド](docs/ALOE_BATCH.md)、[操作仕様](SPECIFICATION.md)を参照してください。
+- 「開いているウィンドウの一覧を見せて」
+- 「タイトルが『メモ帳』のウィンドウを撮影して、表示内容を説明して」
+
+ほかの依頼例は[利用手順](docs/USAGE.md)、操作の詳細は[操作仕様](SPECIFICATION.md)を参照してください。
 
 ## 関連文書
 
