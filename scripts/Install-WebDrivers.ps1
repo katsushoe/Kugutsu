@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param([Parameter(Mandatory)][string]$InstallationRoot)
 
 $ErrorActionPreference = 'Stop'
@@ -10,6 +10,7 @@ $workRoot = Join-Path $root 'dat\driver-setup'
 $manifestPath = Join-Path $driversRoot 'drivers-manifest.json'
 $utf8 = [Text.UTF8Encoding]::new($false)
 Add-Type -AssemblyName System.Net.Http
+Add-Type -AssemblyName System.IO.Compression
 $handler = [Net.Http.HttpClientHandler]::new()
 $client = [Net.Http.HttpClient]::new($handler)
 $client.Timeout = [TimeSpan]::FromMinutes(3)
@@ -18,7 +19,7 @@ $allowedHosts = @('googlechromelabs.github.io','storage.googleapis.com','github.
 function Get-OfficialResponse([string]$uri, [int64]$limit) {
     $response = $client.GetAsync($uri, [Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
     if (-not $response.IsSuccessStatusCode -or $response.RequestMessage.RequestUri.Scheme -ne 'https' -or
-        $response.RequestMessage.RequestUri.Host -notin $allowedHosts) { $response.Dispose(); throw 'Official WebDriver response URI or status is invalid.' }
+        $response.RequestMessage.RequestUri.Host -notin $allowedHosts) { $response.Dispose(); throw ('Official WebDriver response URI or status is invalid: status=' + $response.StatusCode + '; scheme=' + $response.RequestMessage.RequestUri.Scheme + '; host=' + $response.RequestMessage.RequestUri.Host) }
     if ($response.Content.Headers.ContentLength -gt $limit) { $response.Dispose(); throw 'Official WebDriver response exceeds its size limit.' }
     return $response
 }
@@ -36,7 +37,7 @@ function Get-Json([string]$uri) {
     finally { $response.Dispose() }
 }
 
-function Save-OfficialDriver([string]$browser, [string]$version, [string]$uri, [string]$entryName, [string]$destination) {
+function Save-OfficialDriver([string]$browser, [string]$version, [string]$driverVersion, [string]$uri, [string]$entryName, [string]$destination) {
     $archive = Join-Path $workRoot ($browser + '.zip')
     $response = Get-OfficialResponse $uri 150000000
     try {
@@ -56,7 +57,8 @@ function Save-OfficialDriver([string]$browser, [string]$version, [string]$uri, [
     finally { $response.Dispose() }
     $archiveInfo = Get-Item -LiteralPath $archive
     if ($archiveInfo.Length -lt 1 -or $archiveInfo.Length -gt 150000000) { throw 'WebDriver archive size is invalid.' }
-    $zip = [IO.Compression.ZipFile]::OpenRead($archive)
+    $archiveStream = [IO.File]::OpenRead($archive)
+    $zip = [IO.Compression.ZipArchive]::new($archiveStream, [IO.Compression.ZipArchiveMode]::Read)
     try {
         $entry = @($zip.Entries | Where-Object { $_.FullName -eq $entryName })
         if ($entry.Count -ne 1 -or $entry[0].Length -gt 100000000) { throw 'Expected executable is missing from WebDriver archive.' }
@@ -65,16 +67,32 @@ function Save-OfficialDriver([string]$browser, [string]$version, [string]$uri, [
         try { $input.CopyTo($output) }
         finally { $input.Dispose(); $output.Dispose() }
     }
-    finally { $zip.Dispose(); Remove-Item -LiteralPath $archive -Force -ErrorAction SilentlyContinue }
+    finally { $zip.Dispose(); $archiveStream.Dispose(); Remove-Item -LiteralPath $archive -Force -ErrorAction SilentlyContinue }
     $signature = Get-AuthenticodeSignature -LiteralPath $destination
     $publisher = @{chrome='Google LLC';edge='Microsoft Corporation';firefox='Mozilla Corporation'}[$browser]
-    if ($signature.Status -ne [Management.Automation.SignatureStatus]::Valid -or $signature.SignerCertificate.Subject -notlike "*CN=$publisher*")
-    { Remove-Item -LiteralPath $destination -Force; throw 'WebDriver Authenticode publisher is invalid.' }
-    return [pscustomobject]@{ browser=$browser; browserVersion=$version; driverVersion=$null; source=$uri; path=$destination; size=(Get-Item $destination).Length; sha256=(Get-Sha256 $destination); signer=$signature.SignerCertificate.Thumbprint }
+    $signatureValidation = 'authenticode'
+    $signerThumbprint = $null
+    $publisherValid = $signature.Status -eq [Management.Automation.SignatureStatus]::Valid -and
+        $null -ne $signature.SignerCertificate -and $signature.SignerCertificate.Subject -like "*CN=$publisher*"
+    if ($browser -eq 'chrome' -and $signature.Status -eq [Management.Automation.SignatureStatus]::NotSigned) {
+        $fileVersionText = [Diagnostics.FileVersionInfo]::GetVersionInfo($destination).FileVersion
+        $fileVersionNormalized = $fileVersionText -replace '[^0-9.].*$', ''
+        if ($driverVersion -notmatch '^\d+\.\d+\.\d+\.\d+$' -or
+            [version]$fileVersionNormalized -ne [version]$driverVersion) {
+            Remove-Item -LiteralPath $destination -Force
+            throw 'ChromeDriver metadata and executable file version do not match.'
+        }
+        $signatureValidation = 'official_https_and_metadata_version'
+    } elseif ($publisherValid) {
+        $signerThumbprint = $signature.SignerCertificate.Thumbprint
+    } else {
+        Remove-Item -LiteralPath $destination -Force
+        throw 'WebDriver Authenticode publisher is invalid.'
+    }
+    return [pscustomobject]@{ browser=$browser; browserVersion=$version; driverVersion=$driverVersion; source=$uri; path=$destination; size=(Get-Item $destination).Length; sha256=(Get-Sha256 $destination); signatureValidation=$signatureValidation; signer=$signerThumbprint }
 }
 
 if (-not (Test-Path -LiteralPath $config -PathType Leaf)) { throw 'Detected launch target settings are missing.' }
-[void][Reflection.Assembly]::Load('System.IO.Compression.FileSystem')
 $detected = Get-Content -LiteralPath $config -Raw | ConvertFrom-Json
 $appSettings = Get-Content -LiteralPath (Join-Path $root 'config\appsettings.json') -Raw | ConvertFrom-Json
 $launchTargets = @($appSettings.Kugutsu.AllowedLaunchTargets) + @($detected.AllowedLaunchTargets)
@@ -104,19 +122,19 @@ try {
                 $release = $metadata.builds.$build
                 $download = $release.downloads.chromedriver | Where-Object { $_.platform -eq $platform } | Select-Object -First 1
                 if (-not $release -or -not $download) { throw "No official ChromeDriver matches Chrome build $build for $platform." }
-                $record = Save-OfficialDriver $browser $version.ToString() $download.url "chromedriver-$platform/chromedriver.exe" $destination
+                $record = Save-OfficialDriver $browser $version.ToString() $release.version $download.url "chromedriver-$platform/chromedriver.exe" $destination
                 $record.driverVersion = $release.version
             }
             'edge' {
                 if ($version.Major -lt 79) { throw 'Installed Edge is older than the supported Chromium release.' }
                 $edgeArch = if ($platform -eq 'win64') { 'win64' } else { 'win32' }
                 $build = "$($version.Major).$($version.Minor).$($version.Build)"
-                $latest = Get-OfficialResponse "https://msedgedriver.microsoft.com/LATEST_RELEASE_$build" 100
+                $latest = Get-OfficialResponse "https://msedgedriver.microsoft.com/LATEST_RELEASE_$($version.Major)_WINDOWS" 100
                 try { $driverVersion = $latest.Content.ReadAsStringAsync().GetAwaiter().GetResult().Trim() }
                 finally { $latest.Dispose() }
                 if ($driverVersion -notmatch '^\d+\.\d+\.\d+\.\d+$' -or $driverVersion -notlike "$build.*") { throw 'Official Edge WebDriver does not match the installed browser build.' }
                 $uri = "https://msedgedriver.microsoft.com/$driverVersion/edgedriver_$edgeArch.zip"
-                $record = Save-OfficialDriver $browser $version.ToString() $uri 'msedgedriver.exe' $destination
+                $record = Save-OfficialDriver $browser $version.ToString() $driverVersion $uri 'msedgedriver.exe' $destination
                 $record.driverVersion = $driverVersion
             }
             'firefox' {
@@ -124,7 +142,7 @@ try {
                 $driverVersion = '0.36.0'
                 $zipName = "geckodriver-v$driverVersion-$platform.zip"
                 $uri = "https://github.com/mozilla/geckodriver/releases/download/v$driverVersion/$zipName"
-                $record = Save-OfficialDriver $browser $version.ToString() $uri 'geckodriver.exe' $destination
+                $record = Save-OfficialDriver $browser $version.ToString() $driverVersion $uri 'geckodriver.exe' $destination
                 $record.driverVersion = $driverVersion
             }
         }
@@ -142,3 +160,5 @@ try {
 finally {
     Remove-Item -LiteralPath $workRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
+
+

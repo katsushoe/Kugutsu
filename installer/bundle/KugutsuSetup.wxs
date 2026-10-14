@@ -1,7 +1,7 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal"
      xmlns:netfx="http://wixtoolset.org/schemas/v4/wxs/netfx">
-  <Bundle Name="Kugutsu Setup" Manufacturer="Kugutsu" Version="$(ProductVersion)"
+  <Bundle Name="Kugutsu Setup" Manufacturer="Akatsukisoft" Version="$(ProductVersion)"
           UpgradeCode="A15E8F07-4E65-440D-98DD-E0BC48ACAD09">
     <BootstrapperApplication>
       <bal:WixStandardBootstrapperApplication Theme="hyperlinkLicense" LicenseUrl="https://dotnet.microsoft.com/en-us/dotnet_license" />

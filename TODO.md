@@ -277,9 +277,11 @@
 
 - 2026-10-14: P16-10 更新・アンインストールを実装。設定・資格情報を保持し、セットアップ生成ファイルを清掃して共有ランタイムを残す動作を構成。アプリRelease／WiX MSI ICE／Burnビルド成功（警告0・エラー0）。実機インストール・更新・アンインストール未実施。
 
+- 2026-10-14: P16-11 接続・操作手順書を作成。MCPプロキシ登録、単体／バッチ依頼、ロック、結果照会、画像操作の制約、ログ確認を記載。
+
 # Kugutsu TODO
 
-このファイルはKugutsuの短期タスクと実装計画を管理します。外部契約の正本は[SPECIFICATION.md](SPECIFICATION.md)です。P16-10までの155項目を実装済みです。公開ツールはget_version、execute_operation、submit_batch、get_request、cancel_request、lock_mcp、is_mcp_locked、renew_mcp_lock、unlock_mcp、list_windows、get_windowです。操作受付、排他ロック、常駐UI、緊急停止・強制解除、通常終了を実装済みです。操作登録表にはwindow.list、window.get、window.restore、window.activate、window.minimize、window.maximize、window.close、mouse.click、mouse.double_click、mouse.scroll、keyboard.press_key、keyboard.type_text、wait、screen.capture、screen.capture_desktop、ui.list_drivers、control.find、ui.snapshot、control.get_state、control.get_value、control.invoke、control.set_value、control.send_keys、control.select、control.set_toggle、control.set_range_value、control.expand_collapse、control.scroll、control.select_items、control.set_text_selection、grid.get_cell、grid.set_cell_value、app.launch、window.open、app.exit、terminal.launch、terminal.send_keys、terminal.exit、powershell.launch、powershell.send_keys、powershell.exit、browser.get_default、browser.list_installed、browser.launch、browser.navigate、browser.back、browser.forward、browser.exit、dom.find、dom.fill、dom.click、dom.send_keys、dom.get_value、register_signal、wait_for_signal、unregister_signalを実装済みです。認証に失敗したHTTP要求はMCP処理へ渡しません。
+このファイルはKugutsuの短期タスクと実装計画を管理します。外部契約の正本は[SPECIFICATION.md](SPECIFICATION.md)です。P16-11までの156項目を実装済みです。公開ツールはget_version、execute_operation、submit_batch、get_request、cancel_request、lock_mcp、is_mcp_locked、renew_mcp_lock、unlock_mcp、list_windows、get_windowです。操作受付、排他ロック、常駐UI、緊急停止・強制解除、通常終了を実装済みです。操作登録表にはwindow.list、window.get、window.restore、window.activate、window.minimize、window.maximize、window.close、mouse.click、mouse.double_click、mouse.scroll、keyboard.press_key、keyboard.type_text、wait、screen.capture、screen.capture_desktop、ui.list_drivers、control.find、ui.snapshot、control.get_state、control.get_value、control.invoke、control.set_value、control.send_keys、control.select、control.set_toggle、control.set_range_value、control.expand_collapse、control.scroll、control.select_items、control.set_text_selection、grid.get_cell、grid.set_cell_value、app.launch、window.open、app.exit、terminal.launch、terminal.send_keys、terminal.exit、powershell.launch、powershell.send_keys、powershell.exit、browser.get_default、browser.list_installed、browser.launch、browser.navigate、browser.back、browser.forward、browser.exit、dom.find、dom.fill、dom.click、dom.send_keys、dom.get_value、register_signal、wait_for_signal、unregister_signalを実装済みです。認証に失敗したHTTP要求はMCP処理へ渡しません。
 
 ## 実行単位の規則
 
@@ -305,7 +307,7 @@
 
 ## すぐやる
 
-- 次回の対象は**P16-11 接続・操作手順書**です。
+- 実装計画の全156項目が完了しました。
 
 ## 次にやる
 
@@ -570,7 +572,7 @@
 | [X] | P16-08 | ランタイム検出 | x86 Desktop／ASP.NET Core Runtime 10を検出 | x64のみの導入を充足としない |
 | [X] | P16-09 | Burnランタイム導入 | 不足ランタイムを自動導入 | 導入失敗時はMSIへ進まない |
 | [X] | P16-10 | 更新・アンインストール | 製品ファイルとユーザー設定の寿命を処理 | 共有ランタイムを削除しない |
-| [-] | P16-11 | 接続・操作手順書 | 導入から単機能操作までの利用手順を記述 | 設定、ロック、結果照会、画像操作の制約を説明する |
+| [X] | P16-11 | 接続・操作手順書 | docs/USAGE.mdに導入から単体・バッチ操作、結果照会、画像操作の制約までを記述 | READMEから参照できる |
 
 # 次回実行の記録形式
 

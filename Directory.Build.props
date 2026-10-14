@@ -8,6 +8,8 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Deterministic>true</Deterministic>
-    <Version>1.0.0</Version>
+    <Version>1.0.1.0</Version>
+    <Company>Akatsukisoft</Company>
   </PropertyGroup>
 </Project>
+

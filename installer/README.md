@@ -6,14 +6,14 @@ Build the application payload in Release configuration, then build the x86 MSI f
 
 ~~~powershell
 dotnet build ..\Kugutsu.slnx -c Release
-dotnet build .\Kugutsu.wixproj -p:PayloadRoot=..\artifacts\Release -p:ProductVersion=1.0.0
+dotnet build .\Kugutsu.wixproj -p:PayloadRoot=..\artifacts\Release -p:ProductVersion=1.0.1
 ~~~
 
 The build generates bin/installation.json and checks the app, proxy, ConsoleProbe, AloeHost, fixed Aloe dependencies, OCR model files, x86 native libraries, and model license against their versions and SHA-256 values. The MSI project harvests bin, config, and dat into the matching installation folders and creates logs. A missing or modified fixed OCR asset stops the MSI build.
 
 During installation, Kugutsu detects Windows Terminal, Windows PowerShell, conhost, Firefox, Chrome, and Edge from existing executable paths and writes only found targets to `config/detected-launch-targets.json`. Existing entries in `appsettings.json` take precedence. App Execution Aliases are not treated as installed executables; an undetected target remains unavailable until configured manually.
 
-The setup action downloads drivers only for configured and present browsers: ChromeDriver from the official Chrome for Testing build metadata matching Chrome's major/minor/build, Edge WebDriver from Microsoft's matching three-part build, and geckodriver 0.36.0 for Firefox 115 or later. Downloads require HTTPS through the allowlisted official hosts, pass Authenticode publisher validation, and are extracted as a single expected executable. `bin/drivers/drivers-manifest.json` records browser/driver versions, source URL, architecture, size, SHA-256, and signer thumbprint. `BrowserDriverPaths` is generated in the detected settings file while explicit `appsettings.json` entries take precedence. If a detected browser has no supported official driver, installation fails with a nonzero setup result. No detected browser means no driver download.
+The setup action downloads drivers only for configured and present browsers: ChromeDriver from the official Chrome for Testing build metadata matching Chrome's major/minor/build, Edge WebDriver from Microsoft's matching three-part build, and geckodriver 0.36.0 for Firefox 115 or later. Downloads require HTTPS through the allowlisted official hosts and are extracted as a single expected executable. EdgeDriver and geckodriver require a valid Authenticode signature from the expected publisher. ChromeDriver may be unsigned only when the official Chrome for Testing metadata and the executable full four-part FileVersion match exactly; its manifest records `signatureValidation=official_https_and_metadata_version`, local SHA-256, and a null signer. Google currently publishes neither a ChromeDriver signature nor an official checksum, so the local hash is audit evidence, not independent origin authentication. `bin/drivers/drivers-manifest.json` records browser/driver versions, source URL, architecture, size, SHA-256, validation method, and signer thumbprint. `BrowserDriverPaths` is generated in the detected settings file while explicit `appsettings.json` entries take precedence. If a detected browser has no supported official driver, installation fails with a nonzero setup result. No detected browser means no driver download.
 
 ## .NET runtime prerequisite check
 
@@ -24,7 +24,7 @@ The setup action downloads drivers only for configured and present browsers: Chr
 Build the MSI first, then create the Burn setup executable:
 
 ~~~powershell
-dotnet build .\installer\KugutsuSetup.wixproj -p:PayloadRoot=..\artifacts\Release -p:RuntimePayloadRoot=..\artifacts\runtime -p:ProductVersion=1.0.0
+dotnet build .\installer\KugutsuSetup.wixproj -p:PayloadRoot=..\artifacts\Release -p:RuntimePayloadRoot=..\artifacts\runtime -p:ProductVersion=1.0.1
 ~~~
 
 The build reads Microsoft's .NET 10 LTS release metadata and downloads the latest stable x86 Desktop Runtime and ASP.NET Core Runtime installers. It requires HTTPS metadata and download URLs, verifies each file's SHA-512 against Microsoft's release metadata and its valid Microsoft Authenticode signature, and writes `artifacts/runtime/dotnet-runtimes.json`. Both installers are embedded in `artifacts/installers/Kugutsu.Setup.exe`.

@@ -4,7 +4,7 @@
     <OutputName>Kugutsu</OutputName>
     <OutputPath>$(MSBuildThisFileDirectory)..\artifacts\installers\</OutputPath>
     <PayloadRoot Condition="'$(PayloadRoot)' == ''">$(MSBuildThisFileDirectory)..\artifacts\Release</PayloadRoot>
-    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.0</ProductVersion>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.1</ProductVersion>
     <InstallerPlatform>x86</InstallerPlatform>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <DefineConstants>$(DefineConstants);PayloadRoot=$(PayloadRoot);ProductVersion=$(ProductVersion)</DefineConstants>

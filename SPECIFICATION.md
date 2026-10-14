@@ -173,7 +173,7 @@ Kugutsu は、ローカル PC 上のウィンドウを AI から操作するた�
 
 - MCPツール一覧は次のとおりです。全ツールは認証済み要求のみを受理し、共通応答形式は本節の後半に定めます。
 - P02-04では`get_version`だけを公開します。引数なしで即時応答し、操作バッファ・要求ID・MCPロックを必要としません。認証・Host／Origin検証はHTTPホストの全要求向け処理を適用します。
-- `get_version`の共通応答はschemaVersion:1、ok:true、requestId:null、state:null、error:nullです。dataは`{name, version, protocolVersion}`とし、nameはKugutsu、versionは本体のAssemblyInformationalVersion、protocolVersionはSDKの現在の要求／セッションに対応したNegotiatedProtocolVersionを返します。版未確定ならprotocolVersionはnullとし、SDKのパッケージ版をMCPプロトコル版として返しません。製品版はDirectory.Build.propsのVersionで管理し、現在の開発版は1.0.0です。初期化／探索時のServerInfoも同じ製品名・製品版を使います。
+- `get_version`の共通応答はschemaVersion:1、ok:true、requestId:null、state:null、error:nullです。dataは`{name, version, protocolVersion}`とし、nameはKugutsu、versionは本体のAssemblyInformationalVersion、protocolVersionはSDKの現在の要求／セッションに対応したNegotiatedProtocolVersionを返します。版未確定ならprotocolVersionはnullとし、SDKのパッケージ版をMCPプロトコル版として返しません。製品版はDirectory.Build.propsのVersionで管理し、現在の製品版は1.0.1.0です。初期化／探索時のServerInfoも同じ製品名・製品版を使います。
 - SDKのCallToolResultへ共通応答を変換し、structuredContentとcontent内のJSONテキストを一致させます。isErrorはfalseです。版情報を設定ファイルから上書きせず、ツール呼出しでディスク・資格情報の再読込みやウィンドウ操作を行いません。
 
 | MCPツール | 用途 | 主な入力 | 返却内容・動作 |
@@ -702,15 +702,15 @@ Kugutsu は、ローカル PC 上のウィンドウを AI から操作するた�
 
 - P16-05 launch_target_detection：起動対象検出: MSIの遅延カスタムアクションから--detect-launch-targetsを実行し、App Paths／既知配置に存在する起動ファイルのみを検出設定ファイルへ記録します。設定ロードは明示的なappsettings.jsonを優先し、未検出対象を許可しません。アプリ別・シェル別ブラウザ別の検出結果と未検出は検証環境で確認する。
 
-- P16-06 webdriver_distribution：WebDriver配布: Setupは検出／手動設定されたFirefox・Chrome・Edgeだけを対象にし、Chrome for Testingのbuild別JSON、Microsoft Edge WebDriverのbuild別配布、geckodriver 0.36.0をHTTPS取得します。OSが選ぶwin32/win64資産の単一exeだけを抽出し、Authenticator署名と期待発行者を検証後、bin/driversへ配置します。drivers-manifest.jsonに各ブラウザー／ドライバー版、ソース、アーキテクチャ、サイズ、SHA-256、署名者拇印を記録します。検出ブラウザーの対応資産・署名検証がない場合はセットアップ失敗とします。
+- P16-06 webdriver_distribution：WebDriver配布: Setupは検出／手動設定されたFirefox・Chrome・Edgeだけを対象にし、Chrome for Testingのbuild別JSON、Microsoft Edge WebDriverのbuild別配布、geckodriver 0.36.0をHTTPS取得します。win32/win64の単一exeだけを抽出し、Edge／Firefoxは期待発行者のAuthenticode署名を検証します。未署名ChromeDriverは公式HTTPS配布元・Chrome buildメタデータ・実行ファイル4部FileVersionの完全一致を要求し、方式とSHA-256をマニフェストへ記録します。Googleの公式署名・チェックサム不在とローカルSHA-256の限界をADR 0011へ記録します。
 
 - P16-07 ocr_model_distribution：OCRモデル配布: MSI作成時にTesseractLocalOcr.csの固定モデル／ネイティブDLL名とSHA-256を正本として照合し、eng/jpn traineddata、x86 native DLL 2件、tessdata_fastライセンスをinstallation.jsonへ記録します。配布元データ・版・ハッシュ・ライセンスのいずれかが欠落または不一致ならMSI作成を失敗させます。実行時の既存SHA-256再検証を保持します。
 
 - P16-08 dotnet_runtime_detection：.NET Runtime検出: Setup prerequisite script reads HKLM 32-bit view under InstalledVersions/x86, checks registered 10.0.x versions and the matching runtime directories for Microsoft.NETCore.App, Microsoft.WindowsDesktop.App, and Microsoft.AspNetCore.App. It does not accept x64-only installs. JSON report plus exit codes 0=satisfied, 1=missing framework, 2=detection failure is the interface for the Burn bundle. PowerShell syntax is parsed; execution and installer integration await the Burn phase.
 
-- P16-09 burn_runtime_bundle：Build downloads latest stable x86 .NET 10 Desktop and ASP.NET Core Runtime installers from Microsoft release metadata, verifies HTTPS source, metadata SHA-512 and Microsoft Authenticode signature, records versions and hashes in dotnet-runtimes.json, and embeds both in Kugutsu.Setup.exe. Burn detects installed x86 10.x frameworks, permanently installs only missing runtime packages before the vital MSI, passes INSTALLFOLDER=E:\Kugutsu, and stops the chain on package failure. Direct MSI launch also requires x86 .NET 10 Core, Desktop, and ASP.NET Core runtimes. WiX MSI ICE and bundle builds succeed with zero warnings and errors; no installation or runtime execution was performed.
+- P16-09 burn_runtime_bundle：Build downloads latest stable x86 .NET 10 Desktop and ASP.NET Core Runtime installers from Microsoft release metadata, verifies HTTPS source, metadata SHA-512 and Microsoft Authenticode signature, records versions and hashes in dotnet-runtimes.json, and embeds both in Kugutsu.Setup.exe. Burn detects installed x86 10.x frameworks and installs only missing prerequisites. Build succeeded with zero warnings/errors. On 2026-10-14 the runtimes were already present and setup 1.0.1 installed successfully to E:\Kugutsu; Kugutsu.exe started successfully.
 
-- P16-10 installation_lifecycle：appsettings.jsonはHKLMレジストリキーをKeyPathとするPermanent/NeverOverwriteコンポーネントにし、手動設定を修復・更新・アンインストール後も保ちます。MajorUpgradeによる旧製品削除時を含む完全アンインストールでは、FileRef遅延カスタムアクションが`bin/drivers`、`dat/driver-setup`、`config/detected-launch-targets.json`だけをインストールルート配下で削除します。製品バイナリ、MSI管理のRun値はMSIが除去し、Credential Manager・ログ・共有.NETランタイムは保持します。アプリReleaseビルド、WiX ICE検証付きMSIビルド成功（警告0・エラー0）。実インストール／更新／アンインストールは未実施。
+- P16-10 installation_lifecycle：appsettings.jsonと資格情報を更新・削除後も保持し、製品ファイルとRun登録を削除。生成済みドライバー・検出情報を清掃し、共有ランタイムとログを維持します。2026-10-14にBurnセットアップ1.0.1をE:\Kugutsuへ導入し、MSIログ成功・アプリ版1.0.1.0・HKCU Run登録を確認。更新・アンインストールは未検証。
 
 
 ## 9. 実装時の確認事項

@@ -1,5 +1,5 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:netfx="http://wixtoolset.org/schemas/v4/wxs/netfx">
-  <Package Id="KugutsuPackage" Name="Kugutsu" Manufacturer="Kugutsu" Version="$(ProductVersion)"
+  <Package Id="KugutsuPackage" Name="Kugutsu" Manufacturer="Akatsukisoft" Version="$(ProductVersion)"
            UpgradeCode="D6A5EA27-4E54-4FC8-9D46-CB477A5E2F39" Scope="perMachine">
     <MajorUpgrade DowngradeErrorMessage="A newer version of Kugutsu is already installed." />
     <netfx:DotNetCompatibilityCheck Property="DOTNET_X86_DESKTOP10" RuntimeType="desktop" Platform="x86" Version="10.0.0" RollForward="latestPatch" />

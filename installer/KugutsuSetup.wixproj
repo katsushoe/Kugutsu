@@ -5,7 +5,7 @@
     <OutputPath>$(MSBuildThisFileDirectory)..\artifacts\installers\</OutputPath>
     <PayloadRoot Condition="'$(PayloadRoot)' == ''">$(MSBuildThisFileDirectory)..\artifacts\Release</PayloadRoot>
     <RuntimePayloadRoot Condition="'$(RuntimePayloadRoot)' == ''">$(MSBuildThisFileDirectory)..\artifacts\runtime</RuntimePayloadRoot>
-    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.0</ProductVersion>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.1</ProductVersion>
     <InstallerPlatform>x86</InstallerPlatform>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <DefineConstants>$(DefineConstants);PayloadRoot=$(PayloadRoot);RuntimePayloadRoot=$(RuntimePayloadRoot);ProductVersion=$(ProductVersion);KugutsuMsiPath=$(MSBuildThisFileDirectory)..\artifacts\installers\Kugutsu.msi</DefineConstants>
