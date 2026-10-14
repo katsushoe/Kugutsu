@@ -76,7 +76,7 @@ Runtime settings are stored in `config/appsettings.json` under the installation 
 | `dat` | Data files, including OCR models |
 | `logs` | Structured runtime logs |
 
-Setup detects installed launch targets and browser drivers; explicit settings take precedence over detected values. MCP credentials are read from Windows Credential Manager, not from client configuration. See the [sample settings](config/appsettings.json) and [configuration specification (Japanese)](SPECIFICATION.md#7-設定とログ).
+Setup detects installed launch targets and browser drivers; explicit settings take precedence over detected values. MCP credentials are read from Windows Credential Manager, not from client configuration. See the [configuration guide](CONFIG.md), [sample settings](config/appsettings.json), and [configuration specification (Japanese)](SPECIFICATION.md#7-設定とログ).
 
 ## Usage
 
@@ -85,18 +85,17 @@ Start `Kugutsu.exe`, then register `Kugutsu.McpProxy.exe` as an stdio MCP server
 - “List the open windows.”
 - “Capture the window titled ‘Notepad’ and summarize what is visible.”
 
-See the [usage guide (Japanese)](docs/USAGE.md) for more request examples and the [operation specification (Japanese)](SPECIFICATION.md) for details.
+See the [MCP setup guide](MCP_SETUP.md), [MCP command reference](COMMANDS.md), and [usage guide (Japanese)](docs/USAGE.md) for details.
 
 ## Documentation
 
-- [Usage and MCP client setup (Japanese)](docs/USAGE.md)
-- [Operation and configuration specification (Japanese)](SPECIFICATION.md)
-- [Aloe batches (Japanese)](docs/ALOE_BATCH.md)
-- [UI profiles (Japanese)](docs/UI_PROFILES.md)
-- [Craywork profile example (Japanese)](docs/CRAYWORK_PROFILE.md)
+- [Document index](DOCUMENTS.md)
+- [MCP setup](MCP_SETUP.md) and [configuration](CONFIG.md)
+- [MCP command reference](COMMANDS.md) and [package inventory](PACKAGES.md)
+- [Detailed operation specification (Japanese)](SPECIFICATION.md)
+- [Usage guide (Japanese)](docs/USAGE.md), [Aloe batches (Japanese)](docs/ALOE_BATCH.md), and [UI profiles (Japanese)](docs/UI_PROFILES.md)
+- [Design decisions (Japanese)](docs/adr/)
 - [Installer and packaging](installer/README.md)
-- [Managed browser session design (Japanese)](docs/adr/0004-managed-webdriver-sessions.md)
-- [ChromeDriver authenticity policy (Japanese)](docs/adr/0011-chrome-driver-authenticity.md)
 - [Third-party notices (Japanese)](THIRD_PARTY_NOTICES.md)
 
 ## Security

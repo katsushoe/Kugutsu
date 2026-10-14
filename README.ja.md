@@ -76,7 +76,7 @@ dotnet build installer/KugutsuSetup.wixproj -p:PayloadRoot=../artifacts/Release 
 | `dat` | OCRモデルなどのデータファイル |
 | `logs` | 構造化された実行ログ |
 
-セットアップがインストール済み起動対象とブラウザドライバーを検出し、明示設定を検出値より優先します。MCP資格情報はクライアント設定ではなくWindows Credential Managerから読みます。[設定例](config/appsettings.json)と[設定仕様](SPECIFICATION.md#7-設定とログ)を参照してください。
+セットアップがインストール済み起動対象とブラウザドライバーを検出し、明示設定を検出値より優先します。MCP資格情報はクライアント設定ではなくWindows Credential Managerから読みます。[設定ガイド](CONFIG.ja.md)、[設定例](config/appsettings.json)、[設定仕様](SPECIFICATION.md#7-設定とログ)を参照してください。
 
 ## 利用方法
 
@@ -85,18 +85,17 @@ dotnet build installer/KugutsuSetup.wixproj -p:PayloadRoot=../artifacts/Release 
 - 「開いているウィンドウの一覧を見せて」
 - 「タイトルが『メモ帳』のウィンドウを撮影して、表示内容を説明して」
 
-ほかの依頼例は[利用手順](docs/USAGE.md)、操作の詳細は[操作仕様](SPECIFICATION.md)を参照してください。
+接続・初期設定は[MCPセットアップガイド](MCP_SETUP.ja.md)、ほかの依頼例は[利用手順](docs/USAGE.md)、操作の詳細は[MCPコマンドリファレンス](COMMANDS.ja.md)と[製品仕様](SPECIFICATION.md)を参照してください。
 
 ## 関連文書
 
-- [利用手順とMCPクライアント設定](docs/USAGE.md)
-- [操作・設定仕様](SPECIFICATION.md)
-- [Aloeバッチ](docs/ALOE_BATCH.md)
-- [UIプロファイル](docs/UI_PROFILES.md)
-- [Crayworkプロファイル例](docs/CRAYWORK_PROFILE.md)
+- [文書一覧](DOCUMENTS.ja.md)
+- [MCPセットアップ](MCP_SETUP.ja.md)と[設定ガイド](CONFIG.ja.md)
+- [MCPコマンドリファレンス](COMMANDS.ja.md)と[パッケージ一覧](PACKAGES.md)
+- [製品仕様](SPECIFICATION.md)
+- [利用手順](docs/USAGE.md)、[Aloeバッチ](docs/ALOE_BATCH.md)、[UIプロファイル](docs/UI_PROFILES.md)
+- [設計判断](docs/adr/)
 - [インストーラーと配布物の作成（英語・一部日本語）](installer/README.md)
-- [管理ブラウザセッションの設計](docs/adr/0004-managed-webdriver-sessions.md)
-- [ChromeDriverの真正性確認方針](docs/adr/0011-chrome-driver-authenticity.md)
 - [第三者コンポーネント](THIRD_PARTY_NOTICES.md)
 
 ## セキュリティ
