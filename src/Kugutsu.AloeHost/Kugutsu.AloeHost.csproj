@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Kugutsu.AloeHost</AssemblyName>
+    <OutputPath>../../artifacts/$(Configuration)/bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Kugutsu.Contracts/Kugutsu.Contracts.csproj" />
+    <Reference Include="CompilerLib"><HintPath>../../dependencies/aloe/20261013/CompilerLib.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Aloe.CommonLib"><HintPath>../../dependencies/aloe/20261013/Aloe.CommonLib.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Aloe.RuntimeLib"><HintPath>../../dependencies/aloe/20261013/Aloe.RuntimeLib.dll</HintPath><Private>false</Private></Reference>
+    <Compile Include="../Shared/InstallationPaths.cs" Link="Hosting/InstallationPaths.cs" />
+    <Compile Include="../Shared/AloeDependencies.cs" Link="Hosting/AloeDependencies.cs" />
+    <Compile Include="../Shared/AloeWire.cs" Link="Hosting/AloeWire.cs" />
+  </ItemGroup>
+</Project>

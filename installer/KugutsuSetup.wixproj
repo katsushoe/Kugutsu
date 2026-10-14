@@ -1,0 +1,22 @@
+﻿<Project Sdk="WixToolset.Sdk/7.0.0">
+  <PropertyGroup>
+    <OutputType>Bundle</OutputType>
+    <OutputName>Kugutsu.Setup</OutputName>
+    <OutputPath>$(MSBuildThisFileDirectory)..\artifacts\installers\</OutputPath>
+    <PayloadRoot Condition="'$(PayloadRoot)' == ''">$(MSBuildThisFileDirectory)..\artifacts\Release</PayloadRoot>
+    <RuntimePayloadRoot Condition="'$(RuntimePayloadRoot)' == ''">$(MSBuildThisFileDirectory)..\artifacts\runtime</RuntimePayloadRoot>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.0</ProductVersion>
+    <InstallerPlatform>x86</InstallerPlatform>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DefineConstants>$(DefineConstants);PayloadRoot=$(PayloadRoot);RuntimePayloadRoot=$(RuntimePayloadRoot);ProductVersion=$(ProductVersion);KugutsuMsiPath=$(MSBuildThisFileDirectory)..\artifacts\installers\Kugutsu.msi</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.BootstrapperApplications.wixext" Version="7.0.0" />
+    <PackageReference Include="WixToolset.Netfx.wixext" Version="7.0.0" />
+  </ItemGroup>
+  <Target Name="PrepareBundlePayloads" BeforeTargets="CoreCompile">
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)..\artifacts\installers\Kugutsu.msi')" Text="Build the Kugutsu MSI before the setup bundle." />
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)..\scripts\Get-DotNetRuntimePayloads.ps1&quot; -OutputDirectory &quot;$(RuntimePayloadRoot)&quot;" />
+  </Target>
+  <ItemGroup><Compile Include="bundle\KugutsuSetup.wxs" /></ItemGroup>
+</Project>

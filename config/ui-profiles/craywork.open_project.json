@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "profileId": "craywork.open_project",
+  "profileVersion": "1.0.0",
+  "driver": "imgui_visual",
+  "target": { "processName": "Craywork.App", "titleContains": "Craywork" },
+  "screens": [
+    {
+      "screenId": "open_project",
+      "requiredLabels": ["Open Project", "Path", "Cancel"],
+      "rules": [
+        {
+          "ruleId": "project_path",
+          "shape": "input_candidate",
+          "label": "Path",
+          "relation": "right",
+          "semanticRole": "project_file_path_input",
+          "sensitive": false,
+          "allowTextInput": false
+        }
+      ]
+    }
+  ]
+}

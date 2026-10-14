@@ -1,0 +1,16 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+[*.cs]
+charset = utf-8-bom
+
+[*.{csproj,props,slnx,json,md}]
+charset = utf-8
+
+[*.{csproj,props,slnx}]
+indent_size = 2

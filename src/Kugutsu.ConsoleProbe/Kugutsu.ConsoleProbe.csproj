@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>Kugutsu.ConsoleProbe</AssemblyName>
+    <RootNamespace>Kugutsu.ConsoleProbe</RootNamespace>
+    <OutputPath>../../artifacts/$(Configuration)/bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <Compile Include="../Shared/InstallationPaths.cs" Link="Hosting/InstallationPaths.cs" />
+    <Compile Include="../Shared/KugutsuOptions.cs" Link="Hosting/KugutsuOptions.cs" />
+    <Compile Include="../Shared/SettingsLoader.cs" Link="Hosting/SettingsLoader.cs" />
+    <Compile Include="../Shared/SettingsValidator.cs" Link="Hosting/SettingsValidator.cs" />
+    <Compile Include="../Shared/StructuredLog.cs" Link="Hosting/StructuredLog.cs" />
+    <Compile Include="../Shared/LogRetention.cs" Link="Hosting/LogRetention.cs" />
+  </ItemGroup>
+</Project>

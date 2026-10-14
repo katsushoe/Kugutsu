@@ -1,0 +1,18 @@
+﻿<Project Sdk="WixToolset.Sdk/7.0.0">
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <OutputName>Kugutsu</OutputName>
+    <OutputPath>$(MSBuildThisFileDirectory)..\artifacts\installers\</OutputPath>
+    <PayloadRoot Condition="'$(PayloadRoot)' == ''">$(MSBuildThisFileDirectory)..\artifacts\Release</PayloadRoot>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.0</ProductVersion>
+    <InstallerPlatform>x86</InstallerPlatform>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DefineConstants>$(DefineConstants);PayloadRoot=$(PayloadRoot);ProductVersion=$(ProductVersion)</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup><PackageReference Include="WixToolset.Netfx.wixext" Version="7.0.0" /><Compile Include="Product.wxs" /></ItemGroup>
+
+  <Target Name="GenerateInstallationManifest" BeforeTargets="Build">
+    <Error Condition="!Exists('$(PayloadRoot)\bin\Kugutsu.exe')" Text="PayloadRoot must point to a built Kugutsu layout containing bin, config, and dat." />
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)..\scripts\New-InstallationManifest.ps1&quot; -BinDirectory &quot;$(PayloadRoot)\bin&quot;" />
+  </Target>
+</Project>

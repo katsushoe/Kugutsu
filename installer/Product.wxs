@@ -1,0 +1,77 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:netfx="http://wixtoolset.org/schemas/v4/wxs/netfx">
+  <Package Id="KugutsuPackage" Name="Kugutsu" Manufacturer="Kugutsu" Version="$(ProductVersion)"
+           UpgradeCode="D6A5EA27-4E54-4FC8-9D46-CB477A5E2F39" Scope="perMachine">
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Kugutsu is already installed." />
+    <netfx:DotNetCompatibilityCheck Property="DOTNET_X86_DESKTOP10" RuntimeType="desktop" Platform="x86" Version="10.0.0" RollForward="latestPatch" />
+    <netfx:DotNetCompatibilityCheck Property="DOTNET_X86_ASPNET10" RuntimeType="aspnet" Platform="x86" Version="10.0.0" RollForward="latestPatch" />
+    <netfx:DotNetCompatibilityCheck Property="DOTNET_X86_CORE10" RuntimeType="core" Platform="x86" Version="10.0.0" RollForward="latestPatch" />
+    <Launch Condition="DOTNET_X86_DESKTOP10 = 0 AND DOTNET_X86_ASPNET10 = 0 AND DOTNET_X86_CORE10 = 0" Message="Kugutsu requires the x86 .NET 10 Desktop and ASP.NET Core Runtimes. Run KugutsuSetup.exe to install them first." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="INSTALLFOLDER" Name="Kugutsu">
+        <Directory Id="BINDIR" Name="bin" />
+        <Directory Id="CONFIGDIR" Name="config" />
+        <Directory Id="DATDIR" Name="dat" />
+        <Directory Id="LOGSDIR" Name="logs" />
+      </Directory>
+    </StandardDirectory>
+
+    <CustomAction Id="EnsureMcpCredential" FileRef="KugutsuExeFile"
+                  ExeCommand="--ensure-mcp-credential" Execute="deferred" Impersonate="yes" Return="check" />
+    <CustomAction Id="DetectLaunchTargets" FileRef="KugutsuExeFile"
+                  ExeCommand="--detect-launch-targets" Execute="deferred" Impersonate="yes" Return="check" />
+    <CustomAction Id="InstallWebDrivers" FileRef="KugutsuExeFile"
+                  ExeCommand="--install-webdrivers" Execute="deferred" Impersonate="yes" Return="check" />
+    <CustomAction Id="CleanupSetupArtifacts" FileRef="KugutsuExeFile"
+                  ExeCommand="--cleanup-setup-artifacts" Execute="deferred" Impersonate="no" Return="check" />
+    <InstallExecuteSequence>
+      <Custom Action="EnsureMcpCredential" After="InstallFiles" Condition="NOT REMOVE=&quot;ALL&quot;" />
+      <Custom Action="DetectLaunchTargets" After="EnsureMcpCredential" Condition="NOT REMOVE=&quot;ALL&quot;" />
+      <Custom Action="InstallWebDrivers" After="DetectLaunchTargets" Condition="NOT REMOVE=&quot;ALL&quot;" />
+      <Custom Action="CleanupSetupArtifacts" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+    </InstallExecuteSequence>
+
+    <Feature Id="MainFeature" Title="Kugutsu" Level="1">
+      <ComponentGroupRef Id="BinPayload" />
+      <ComponentGroupRef Id="ConfigPayload" />
+      <ComponentGroupRef Id="DataPayload" />
+      <ComponentGroupRef Id="LogFolder" />
+      <ComponentGroupRef Id="CurrentUserStartup" />
+    </Feature>
+  </Package>
+
+  <Fragment>
+    <ComponentGroup Id="BinPayload" Directory="BINDIR">
+      <Component Id="KugutsuAppHostComponent" Guid="594B7B19-FDD5-4E3D-B886-F4E53D0A4D15">
+        <File Id="KugutsuExeFile" Source="$(PayloadRoot)\bin\Kugutsu.exe" KeyPath="yes" />
+      </Component>
+      <Files Include="$(PayloadRoot)\bin\**">
+        <Exclude Files="$(PayloadRoot)\bin\Kugutsu.exe" />
+        <Exclude Files="$(PayloadRoot)\bin\**\*.pdb" />
+      </Files>
+    </ComponentGroup>
+    <ComponentGroup Id="ConfigPayload" Directory="CONFIGDIR">
+      <Component Id="PreserveUserSettings" Guid="99E4A506-1832-4D33-9075-C7688C89D8B6" Permanent="yes" NeverOverwrite="yes">
+        <RegistryValue Root="HKLM" Key="Software\Kugutsu" Name="UserSettingsInstalled" Type="integer" Value="1" KeyPath="yes" />
+        <File Id="UserAppSettingsFile" Source="$(PayloadRoot)\config\appsettings.json" />
+      </Component>
+      <Files Include="$(PayloadRoot)\config\**">
+        <Exclude Files="$(PayloadRoot)\config\appsettings.json" />
+      </Files>
+    </ComponentGroup>
+    <ComponentGroup Id="DataPayload" Directory="DATDIR">
+      <Files Include="$(PayloadRoot)\dat\**" />
+    </ComponentGroup>
+    <ComponentGroup Id="CurrentUserStartup" Directory="INSTALLFOLDER">
+      <Component Id="KugutsuLogonStartup" Guid="DDA02479-3327-427A-B610-6B1E235CBDC2">
+        <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                       Name="Kugutsu" Type="string" Value="&quot;[BINDIR]Kugutsu.exe&quot;" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>    <ComponentGroup Id="LogFolder">
+      <Component Id="CreateLogFolder" Directory="LOGSDIR" Guid="FBE87132-20B3-4D99-BDFC-F50B9E90A335">
+        <CreateFolder />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

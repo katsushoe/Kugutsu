@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Kugutsu.Contracts</AssemblyName>
+    <RootNamespace>Kugutsu.Contracts</RootNamespace>
+  </PropertyGroup>
+</Project>

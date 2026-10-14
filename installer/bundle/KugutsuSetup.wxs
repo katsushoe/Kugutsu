@@ -1,0 +1,25 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal"
+     xmlns:netfx="http://wixtoolset.org/schemas/v4/wxs/netfx">
+  <Bundle Name="Kugutsu Setup" Manufacturer="Kugutsu" Version="$(ProductVersion)"
+          UpgradeCode="A15E8F07-4E65-440D-98DD-E0BC48ACAD09">
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication Theme="hyperlinkLicense" LicenseUrl="https://dotnet.microsoft.com/en-us/dotnet_license" />
+    </BootstrapperApplication>
+    <netfx:DotNetCoreSearch Id="SearchX86Desktop10" RuntimeType="desktop" Platform="x86" MajorVersion="10" Variable="DotNetX86Desktop10" />
+    <netfx:DotNetCoreSearch Id="SearchX86AspNet10" RuntimeType="aspnet" Platform="x86" MajorVersion="10" Variable="DotNetX86AspNet10" />
+    <netfx:DotNetCoreSearch Id="SearchX86Core10" RuntimeType="core" Platform="x86" MajorVersion="10" Variable="DotNetX86Core10" />
+    <Chain>
+      <ExePackage Id="DotNetDesktop10X86" SourceFile="$(RuntimePayloadRoot)\windowsdesktop-runtime-win-x86.exe"
+                  InstallArguments="/install /quiet /norestart" PerMachine="yes" Permanent="yes" Vital="yes"
+                  DetectCondition="DotNetX86Desktop10" />
+      <ExePackage Id="DotNetAspNet10X86" SourceFile="$(RuntimePayloadRoot)\aspnetcore-runtime-win-x86.exe"
+                  InstallArguments="/install /quiet /norestart" PerMachine="yes" Permanent="yes" Vital="yes"
+                  DetectCondition="DotNetX86AspNet10" />
+      <MsiPackage Id="KugutsuMsiPackage" SourceFile="$(KugutsuMsiPath)"
+                  Vital="yes">
+        <MsiProperty Name="INSTALLFOLDER" Value="E:\Kugutsu" />
+      </MsiPackage>
+    </Chain>
+  </Bundle>
+</Wix>

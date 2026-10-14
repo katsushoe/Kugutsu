@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>Kugutsu</AssemblyName>
+    <RootNamespace>Kugutsu.App</RootNamespace>
+    <UseWindowsForms>true</UseWindowsForms>
+    <OutputPath>../../artifacts/$(Configuration)/bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Tesseract" Version="[5.2.0]" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App.WPF" />
+    <ProjectReference Include="../Kugutsu.Contracts/Kugutsu.Contracts.csproj" />
+    <ProjectReference Include="../Kugutsu.ConsoleProbe/Kugutsu.ConsoleProbe.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="../Kugutsu.AloeHost/Kugutsu.AloeHost.csproj" ReferenceOutputAssembly="false" />
+    <Compile Include="../Shared/AloeDependencies.cs" Link="Hosting/AloeDependencies.cs" />
+    <Compile Include="../Shared/AloeWire.cs" Link="Hosting/AloeWire.cs" />
+    <Compile Include="../Shared/InstallationPaths.cs" Link="Hosting/InstallationPaths.cs" />
+    <Compile Include="../Shared/KugutsuOptions.cs" Link="Hosting/KugutsuOptions.cs" />
+    <Compile Include="../Shared/SettingsLoader.cs" Link="Hosting/SettingsLoader.cs" />
+    <Compile Include="../Shared/SettingsValidator.cs" Link="Hosting/SettingsValidator.cs" />
+    <Compile Include="../Shared/StructuredLog.cs" Link="Hosting/StructuredLog.cs" />
+    <Compile Include="../Shared/LogRetention.cs" Link="Hosting/LogRetention.cs" />
+    <Compile Include="../Shared/CredentialLoader.cs" Link="Hosting/CredentialLoader.cs" />
+    <Compile Include="../Shared/LaunchTargetDetector.cs" Link="Hosting/LaunchTargetDetector.cs" />
+    <Compile Include="../Shared/BearerCredential.cs" Link="Hosting/BearerCredential.cs" />
+    <Compile Include="../Shared/SessionProtocol.cs" Link="Hosting/SessionProtocol.cs" />
+  </ItemGroup>
+  <Target Name="CopyDefaultSettings" AfterTargets="Build">
+    <Copy SourceFiles="../../config/appsettings.json" DestinationFiles="$(OutputPath)../config/appsettings.json" SkipUnchangedFiles="true" Condition="!Exists('$(OutputPath)../config/appsettings.json')" />
+  </Target>
+  <Target Name="CopyOcrModels" AfterTargets="Build">
+    <ItemGroup><OcrModel Include="../../dat/ocr/tessdata_fast-4.1.0/*" /></ItemGroup>
+    <Copy SourceFiles="@(OcrModel)" DestinationFolder="$(OutputPath)../dat/ocr/tessdata_fast-4.1.0/" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="CopyVisualProfiles" AfterTargets="Build">
+    <ItemGroup><VisualProfile Include="../../config/ui-profiles/*.json" /></ItemGroup>
+    <Copy SourceFiles="@(VisualProfile)" DestinationFolder="$(OutputPath)../config/ui-profiles/" SkipUnchangedFiles="true"
+          Condition="!Exists('$(OutputPath)../config/ui-profiles/%(VisualProfile.Filename)%(VisualProfile.Extension)')" />
+  </Target>
+  <Target Name="CopyFixedAloeDependencies" AfterTargets="Build">
+    <ItemGroup><AloeDependencyFile Include="../../dependencies/aloe/20261013/*" /></ItemGroup>
+    <Copy SourceFiles="@(AloeDependencyFile)" DestinationFolder="$(OutputPath)aloe/20261013/" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="CopyWebDriverInstaller" AfterTargets="Build">
+    <Copy SourceFiles="../../scripts/Install-WebDrivers.ps1" DestinationFiles="$(OutputPath)Install-WebDrivers.ps1" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

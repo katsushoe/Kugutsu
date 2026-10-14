@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Kugutsu.App/Kugutsu.App.csproj" />
+    <Project Path="src/Kugutsu.McpProxy/Kugutsu.McpProxy.csproj" />
+    <Project Path="src/Kugutsu.Contracts/Kugutsu.Contracts.csproj" />
+    <Project Path="src/Kugutsu.ConsoleProbe/Kugutsu.ConsoleProbe.csproj" />
+    <Project Path="src/Kugutsu.AloeHost/Kugutsu.AloeHost.csproj" />
+  </Folder>
+</Solution>
