@@ -10,11 +10,14 @@ internal sealed class OperationBufferForm : Form
     private readonly Label _lockStatusLabel;
     private readonly Label _emergencyStatusLabel;
     private readonly System.Windows.Forms.Timer _refreshTimer;
+    private readonly Icon _windowIcon;
     private bool _allowClose;
 
     internal OperationBufferForm(OperationRequestQueue queue)
     {
         _queue = queue;
+        _windowIcon = KugutsuIcon.Load(SystemInformation.IconSize);
+        Icon = _windowIcon;
         Text = "Kugutsu - 操作バッファ";
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(720, 320);
@@ -136,5 +139,6 @@ internal sealed class OperationBufferForm : Form
     {
         if (disposing) { _refreshTimer.Dispose(); }
         base.Dispose(disposing);
+        if (disposing) { _windowIcon.Dispose(); }
     }
 }
