@@ -4,6 +4,7 @@
     <AssemblyName>Kugutsu</AssemblyName>
     <RootNamespace>Kugutsu.App</RootNamespace>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>../../assets/icon/kugutsu.ico</ApplicationIcon>
     <OutputPath>../../artifacts/$(Configuration)/bin/</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -11,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Tesseract" Version="[5.2.0]" />
+    <EmbeddedResource Include="../../assets/icon/kugutsu.ico" LogicalName="Kugutsu.App.kugutsu.ico" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <FrameworkReference Include="Microsoft.WindowsDesktop.App.WPF" />
     <ProjectReference Include="../Kugutsu.Contracts/Kugutsu.Contracts.csproj" />

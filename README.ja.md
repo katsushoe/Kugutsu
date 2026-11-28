@@ -76,28 +76,26 @@ dotnet build installer/KugutsuSetup.wixproj -p:PayloadRoot=../artifacts/Release 
 | `dat` | OCRモデルなどのデータファイル |
 | `logs` | 構造化された実行ログ |
 
-セットアップがインストール済み起動対象とブラウザドライバーを検出し、明示設定を検出値より優先します。MCP資格情報はクライアント設定ではなくWindows Credential Managerから読みます。[設定例](config/appsettings.json)と[設定仕様](SPECIFICATION.md#7-設定とログ)を参照してください。
+セットアップがインストール済み起動対象とブラウザドライバーを検出し、明示設定を検出値より優先します。MCP資格情報はクライアント設定ではなくWindows Credential Managerから読みます。[設定ガイド](CONFIG.ja.md)、[設定例](config/appsettings.json)、[設定仕様](SPECIFICATION.md#7-設定とログ)を参照してください。
 
 ## 利用方法
 
-- 単体操作は `execute_operation`、JSON操作列またはAloeプログラムは `submit_batch` に渡します。要求はFIFOの操作バッファへ入り、`get_request` で完了と結果を確認します。取消要求は `cancel_request` です。
-- ウィンドウの一覧、前面化、起動、終了、最小化、最大化、復元に対応します。マウス・キー入力、ウィンドウ画像・デスクトップ画像の取得もできます。
-- コントロール操作はUI Automationまたは独自描画UI向けの画像ドライバーを使います。画像操作には対応プロファイルと対象確認が必要です。OCRによる値の完全一致やアプリ内部状態の取得は保証しません。
-- ブラウザ・DOM操作は管理されたWebDriverセッションでChrome、Edge、Firefoxに対応します。ブラウザ種類を明示します。既定ブラウザとインストール済みブラウザの照会もできます。
-- 複数要求にまたがる占有には `lock_mcp`、`is_mcp_locked`、`renew_mcp_lock`、`unlock_mcp` を使います。条件待機用シグナルの登録、待機、解除にも対応します。
+`Kugutsu.exe`を起動し、[はじめに](#はじめに)の設定例に従って、MCPクライアントに `Kugutsu.McpProxy.exe` をstdioサーバとして登録します。AIへの依頼例：
 
-引数、結果、制限は[利用手順](docs/USAGE.md)、[Aloeガイド](docs/ALOE_BATCH.md)、[操作仕様](SPECIFICATION.md)を参照してください。
+- 「開いているウィンドウの一覧を見せて」
+- 「タイトルが『メモ帳』のウィンドウを撮影して、表示内容を説明して」
+
+接続・初期設定は[MCPセットアップガイド](MCP_SETUP.ja.md)、ほかの依頼例は[利用手順](docs/USAGE.md)、操作の詳細は[MCPコマンドリファレンス](COMMANDS.ja.md)と[製品仕様](SPECIFICATION.md)を参照してください。
 
 ## 関連文書
 
-- [利用手順とMCPクライアント設定](docs/USAGE.md)
-- [操作・設定仕様](SPECIFICATION.md)
-- [Aloeバッチ](docs/ALOE_BATCH.md)
-- [UIプロファイル](docs/UI_PROFILES.md)
-- [Crayworkプロファイル例](docs/CRAYWORK_PROFILE.md)
+- [文書一覧](DOCUMENTS.ja.md)
+- [MCPセットアップ](MCP_SETUP.ja.md)と[設定ガイド](CONFIG.ja.md)
+- [MCPコマンドリファレンス](COMMANDS.ja.md)と[パッケージ一覧](PACKAGES.md)
+- [製品仕様](SPECIFICATION.md)
+- [利用手順](docs/USAGE.md)、[Aloeバッチ](docs/ALOE_BATCH.md)、[UIプロファイル](docs/UI_PROFILES.md)
+- [設計判断](docs/adr/)
 - [インストーラーと配布物の作成（英語・一部日本語）](installer/README.md)
-- [管理ブラウザセッションの設計](docs/adr/0004-managed-webdriver-sessions.md)
-- [ChromeDriverの真正性確認方針](docs/adr/0011-chrome-driver-authenticity.md)
 - [第三者コンポーネント](THIRD_PARTY_NOTICES.md)
 
 ## セキュリティ

@@ -3,6 +3,7 @@ namespace Kugutsu.App;
 internal sealed class TrayApplicationContext : ApplicationContext
 {
     private readonly NotifyIcon _notifyIcon;
+    private readonly Icon _trayIcon;
     private readonly OperationBufferForm _bufferForm;
     private readonly OperationRequestQueue _queue;
     private readonly ToolStripMenuItem _lockStatus;
@@ -55,9 +56,10 @@ internal sealed class TrayApplicationContext : ApplicationContext
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(_exit);
 
+        _trayIcon = KugutsuIcon.Load(SystemInformation.SmallIconSize);
         _notifyIcon = new NotifyIcon
         {
-            Icon = SystemIcons.Application,
+            Icon = _trayIcon,
             Text = "Kugutsu",
             ContextMenuStrip = menu,
             Visible = true
@@ -126,6 +128,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
             _notifyIcon.Visible = false;
             _notifyIcon.ContextMenuStrip?.Dispose();
             _notifyIcon.Dispose();
+            _trayIcon.Dispose();
             _bufferForm.AllowClose();
             _bufferForm.Dispose();
         }

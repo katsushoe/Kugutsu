@@ -76,28 +76,26 @@ Runtime settings are stored in `config/appsettings.json` under the installation 
 | `dat` | Data files, including OCR models |
 | `logs` | Structured runtime logs |
 
-Setup detects installed launch targets and browser drivers; explicit settings take precedence over detected values. MCP credentials are read from Windows Credential Manager, not from client configuration. See the [sample settings](config/appsettings.json) and [configuration specification (Japanese)](SPECIFICATION.md#7-設定とログ).
+Setup detects installed launch targets and browser drivers; explicit settings take precedence over detected values. MCP credentials are read from Windows Credential Manager, not from client configuration. See the [configuration guide](CONFIG.md), [sample settings](config/appsettings.json), and [configuration specification (Japanese)](SPECIFICATION.md#7-設定とログ).
 
 ## Usage
 
-- Use `execute_operation` for one operation and `submit_batch` for a JSON operation list or an Aloe program. Accepted requests enter a FIFO operation buffer; use `get_request` to check completion and results, or `cancel_request` to request cancellation.
-- Window operations include listing, activation, opening, closing, minimizing, maximizing, and restoration. Input and inspection include mouse/keyboard operations and window or desktop snapshots.
-- Control operations use UI Automation or visual drivers for custom drawn UIs. Visual operations require supported profiles and target verification; OCR does not guarantee an exact value or access to internal application state.
-- Browser and DOM operations support Chrome, Edge, and Firefox through managed WebDriver sessions. Select the browser type explicitly. Installed/default browser discovery is also available.
-- Use `lock_mcp`, `is_mcp_locked`, `renew_mcp_lock`, and `unlock_mcp` for exclusive work across multiple requests. Signals support registering, waiting for, and removing conditions.
+Start `Kugutsu.exe`, then register `Kugutsu.McpProxy.exe` as an stdio MCP server in your AI client using the configuration in [Getting Started](#getting-started). Example requests:
 
-See the [usage guide (Japanese)](docs/USAGE.md), [Aloe guide (Japanese)](docs/ALOE_BATCH.md), and [operation specification (Japanese)](SPECIFICATION.md) for arguments, results, and limitations.
+- “List the open windows.”
+- “Capture the window titled ‘Notepad’ and summarize what is visible.”
+
+See the [MCP setup guide](MCP_SETUP.md), [MCP command reference](COMMANDS.md), and [usage guide (Japanese)](docs/USAGE.md) for details.
 
 ## Documentation
 
-- [Usage and MCP client setup (Japanese)](docs/USAGE.md)
-- [Operation and configuration specification (Japanese)](SPECIFICATION.md)
-- [Aloe batches (Japanese)](docs/ALOE_BATCH.md)
-- [UI profiles (Japanese)](docs/UI_PROFILES.md)
-- [Craywork profile example (Japanese)](docs/CRAYWORK_PROFILE.md)
+- [Document index](DOCUMENTS.md)
+- [MCP setup](MCP_SETUP.md) and [configuration](CONFIG.md)
+- [MCP command reference](COMMANDS.md) and [package inventory](PACKAGES.md)
+- [Detailed operation specification (Japanese)](SPECIFICATION.md)
+- [Usage guide (Japanese)](docs/USAGE.md), [Aloe batches (Japanese)](docs/ALOE_BATCH.md), and [UI profiles (Japanese)](docs/UI_PROFILES.md)
+- [Design decisions (Japanese)](docs/adr/)
 - [Installer and packaging](installer/README.md)
-- [Managed browser session design (Japanese)](docs/adr/0004-managed-webdriver-sessions.md)
-- [ChromeDriver authenticity policy (Japanese)](docs/adr/0011-chrome-driver-authenticity.md)
 - [Third-party notices (Japanese)](THIRD_PARTY_NOTICES.md)
 
 ## Security
