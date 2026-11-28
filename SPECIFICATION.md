@@ -173,7 +173,7 @@ Kugutsu は、ローカル PC 上のウィンドウを AI から操作するた�
 
 - MCPツール一覧は次のとおりです。全ツールは認証済み要求のみを受理し、共通応答形式は本節の後半に定めます。
 - P02-04では`get_version`だけを公開します。引数なしで即時応答し、操作バッファ・要求ID・MCPロックを必要としません。認証・Host／Origin検証はHTTPホストの全要求向け処理を適用します。
-- `get_version`の共通応答はschemaVersion:1、ok:true、requestId:null、state:null、error:nullです。dataは`{name, version, protocolVersion}`とし、nameはKugutsu、versionは本体のAssemblyInformationalVersion、protocolVersionはSDKの現在の要求／セッションに対応したNegotiatedProtocolVersionを返します。版未確定ならprotocolVersionはnullとし、SDKのパッケージ版をMCPプロトコル版として返しません。製品版はDirectory.Build.propsのVersionで管理し、現在の製品版は1.0.1.0です。初期化／探索時のServerInfoも同じ製品名・製品版を使います。
+- `get_version`の共通応答はschemaVersion:1、ok:true、requestId:null、state:null、error:nullです。dataは`{name, version, protocolVersion}`とし、nameはKugutsu、versionは本体のAssemblyInformationalVersion、protocolVersionはSDKの現在の要求／セッションに対応したNegotiatedProtocolVersionを返します。版未確定ならprotocolVersionはnullとし、SDKのパッケージ版をMCPプロトコル版として返しません。製品版はDirectory.Build.propsのVersionで管理し、現在の製品版は1.0.2.0です。初期化／探索時のServerInfoも同じ製品名・製品版を使います。
 - SDKのCallToolResultへ共通応答を変換し、structuredContentとcontent内のJSONテキストを一致させます。isErrorはfalseです。版情報を設定ファイルから上書きせず、ツール呼出しでディスク・資格情報の再読込みやウィンドウ操作を行いません。
 
 | MCPツール | 用途 | 主な入力 | 返却内容・動作 |
