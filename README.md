@@ -59,8 +59,8 @@ dotnet build Kugutsu.slnx -c Release --no-restore
 Build output uses the `artifacts/Release/bin`, `config`, `dat`, and `logs` layout. The app still requires configured credentials and runtimes. Package the output with WiX Toolset SDK 7.0.0:
 
 ```powershell
-dotnet build installer/Kugutsu.wixproj -p:PayloadRoot=../artifacts/Release -p:ProductVersion=1.0.1
-dotnet build installer/KugutsuSetup.wixproj -p:PayloadRoot=../artifacts/Release -p:RuntimePayloadRoot=../artifacts/runtime -p:ProductVersion=1.0.1
+dotnet build installer/Kugutsu.wixproj -p:PayloadRoot=../artifacts/Release -p:ProductVersion=1.0.2
+dotnet build installer/KugutsuSetup.wixproj -p:PayloadRoot=../artifacts/Release -p:RuntimePayloadRoot=../artifacts/runtime -p:ProductVersion=1.0.2
 ```
 
 See the [installer guide](installer/README.md) for payload validation and runtime downloads.

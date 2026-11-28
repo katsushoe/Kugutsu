@@ -59,8 +59,8 @@ dotnet build Kugutsu.slnx -c Release --no-restore
 出力は `artifacts/Release/bin`、`config`、`dat`、`logs` の構成です。本体の起動には資格情報とランタイムが必要です。WiX Toolset SDK 7.0.0で配布物を作成します。
 
 ```powershell
-dotnet build installer/Kugutsu.wixproj -p:PayloadRoot=../artifacts/Release -p:ProductVersion=1.0.1
-dotnet build installer/KugutsuSetup.wixproj -p:PayloadRoot=../artifacts/Release -p:RuntimePayloadRoot=../artifacts/runtime -p:ProductVersion=1.0.1
+dotnet build installer/Kugutsu.wixproj -p:PayloadRoot=../artifacts/Release -p:ProductVersion=1.0.2
+dotnet build installer/KugutsuSetup.wixproj -p:PayloadRoot=../artifacts/Release -p:RuntimePayloadRoot=../artifacts/runtime -p:ProductVersion=1.0.2
 ```
 
 配布物の検証とランタイム取得は[インストーラーガイド（英語・一部日本語）](installer/README.md)を参照してください。

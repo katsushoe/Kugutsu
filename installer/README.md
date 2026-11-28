@@ -6,7 +6,7 @@ Build the application payload in Release configuration, then build the x86 MSI f
 
 ~~~powershell
 dotnet build ..\Kugutsu.slnx -c Release
-dotnet build .\Kugutsu.wixproj -p:PayloadRoot=..\artifacts\Release -p:ProductVersion=1.0.1
+dotnet build .\Kugutsu.wixproj -p:PayloadRoot=..\artifacts\Release -p:ProductVersion=1.0.2
 ~~~
 
 The build generates bin/installation.json and checks the app, proxy, ConsoleProbe, AloeHost, fixed Aloe dependencies, OCR model files, x86 native libraries, and model license against their versions and SHA-256 values. The MSI project harvests bin, config, and dat into the matching installation folders and creates logs. A missing or modified fixed OCR asset stops the MSI build.
@@ -24,7 +24,7 @@ The setup action downloads drivers only for configured and present browsers: Chr
 Build the MSI first, then create the Burn setup executable:
 
 ~~~powershell
-dotnet build .\installer\KugutsuSetup.wixproj -p:PayloadRoot=..\artifacts\Release -p:RuntimePayloadRoot=..\artifacts\runtime -p:ProductVersion=1.0.1
+dotnet build .\installer\KugutsuSetup.wixproj -p:PayloadRoot=..\artifacts\Release -p:RuntimePayloadRoot=..\artifacts\runtime -p:ProductVersion=1.0.2
 ~~~
 
 The build reads Microsoft's .NET 10 LTS release metadata and downloads the latest stable x86 Desktop Runtime and ASP.NET Core Runtime installers. It requires HTTPS metadata and download URLs, verifies each file's SHA-512 against Microsoft's release metadata and its valid Microsoft Authenticode signature, and writes `artifacts/runtime/dotnet-runtimes.json`. Both installers are embedded in `artifacts/installers/Kugutsu.Setup.exe`.
